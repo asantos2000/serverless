@@ -145,6 +145,32 @@ Successfully tagged first-example:0.0.2
 Updating route /first-example using image first-example:0.0.2...
 ```
 
+#### Start FN dashboard
+```bash
+$ docker run --rm -it --link functions:api -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
+```
+
+#### Calling your function
+
+Local
+
+```bash
+echo "Anderson" | fn run
+Hello, Anderson!
+```
+
+Remote
+
+```bash
+$ echo "Anderson" | fn call hello-java first-example
+Hello, Anderson!
+
+$ curl -X POST -d 'Anderson' http://localhost:8080/r/hello-java/first-example
+Hello, Anderson!
+```
+
+Open your browser at http://localhost:4000 and go to your app (hello-java) and run your function.
+
 ### More examples
 ```bash
 $ git clone https://github.com/asantos2000/serverless.git fn-examples
