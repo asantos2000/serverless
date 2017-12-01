@@ -155,14 +155,14 @@ $ docker run --rm -it --link functions:api -p 4000:4000 -e "FN_API_URL=http://ap
 Local
 
 ```bash
-echo "Anderson" | fn run
+echo -n Anderson | fn run
 Hello, Anderson!
 ```
 
 Remote
 
 ```bash
-$ echo "Anderson" | fn call hello-java first-example
+$ echo -n Anderson | fn call hello-java first-example
 Hello, Anderson!
 
 $ curl -X POST -d 'Anderson' http://localhost:8080/r/hello-java/first-example
