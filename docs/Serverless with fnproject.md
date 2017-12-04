@@ -8,11 +8,16 @@ Alternatives: http://fission.io
 
 ### Install fn client
 
+![user input](images/terminal64.png)
+
 ```bash
 $ curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 ```
 
 ### Deploying first example
+
+![user input](images/terminal64.png)
+
 ```bash
 $ mkdir first-example
 ```
@@ -146,20 +151,27 @@ Updating route /first-example using image first-example:0.0.2...
 ```
 
 #### Start FN dashboard
+
+![user input](images/terminal64.png)
+
 ```bash
 $ docker run --rm -it --link functions:api -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
 ```
 
 #### Calling your function
 
-Local
+**Local**
+
+![user input](images/terminal64.png)
 
 ```bash
 echo -n Anderson | fn run
 Hello, Anderson!
 ```
 
-Remote
+**Remote**
+
+![user input](images/terminal64.png)
 
 ```bash
 $ echo -n Anderson | fn call hello-java first-example
@@ -171,12 +183,84 @@ Hello, Anderson!
 
 Open your browser at http://localhost:4000 and go to your app (hello-java) and run your function.
 
-### More examples
+## Create an app
+
+Fn supports grouping functions into a set that defines an application (or API), making it easy to organize and deploy.
+
+This part is easy, just create an `app.yaml` file and put a name in it:
+
+![user input](images/terminal64.png)
+
+```sh
+$ mkdir myapp2
+$ cd myapp2
+$ echo 'name: myapp2' > app.yaml
+```
+
+This directory will be the root of your application.
+
+### Create a root function
+
+The root function will be available at `/` on your application.
+
+![user input](images/terminal64.png)
+
+```sh
+$ fn init --runtime ruby
+```
+
+Now we have a Ruby function alongside our `app.yaml`.
+
+### Create a sub route
+
+Now let's create a sub route at `/hello`:
+
+![user input](images/terminal64.png)
+
+```sh
+$ fn init --runtime go hello
+```
+
+Now we have two functions in our app. Run:
+
+![user input](images/terminal64.png)
+
+```sh
+$ ls
+```
+
+To see our root function, our `app.yaml` and a directory named `hello`.
+
+### Deploy the entire app
+
+Now we can deploy the entire application with one command:
+
+![user input](images/terminal64.png)
+
+```sh
+$ fn deploy --all --local
+```
+
+Once the command is done, let's surf to our application:
+
+* Root function at: http://localhost:8080/r/myapp2/
+* And the hello function at: http://localhost:8080/r/myapp2/hello
+
+### Wrapping Up
+
+Congratulations! In this tutorial you learned how to group functions into an application and deploy them
+with a single command.
+
+
+## More examples
+
+![user input](images/terminal64.png)
+
 ```bash
 $ git clone https://github.com/asantos2000/serverless.git fn-examples
 ```
 
-### References
+## References
 1. [Fn Project home](https://fnproject.io/)
 1. [Github - The container native, cloud agnostic serverless platform](https://github.com/fnproject/fn)
 1. [Java API and runtime for fn](https://github.com/fnproject/fdk-java)

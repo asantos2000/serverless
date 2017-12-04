@@ -1,0 +1,5 @@
+version: 0.0.2
+runtime: java
+cmd: com.example.fn.PrimeFunction::handleRequest
+format: http
+path: /primes
