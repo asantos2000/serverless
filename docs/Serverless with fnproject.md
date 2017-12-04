@@ -271,4 +271,3 @@ $ git clone https://github.com/asantos2000/serverless.git fn-examples
 1. [Top 10 JDBC Best Practices for Java Programmer](http://javarevisited.blogspot.com.br/2012/08/top-10-jdbc-best-practices-for-java.html)
 1. [Best practices in Coding, Designing and Architecting Java Applications](https://github.com/in28minutes/java-best-practices#data-layer)
 1. [Install Docker](https://docs.docker.com/engine/installation/)
- 
