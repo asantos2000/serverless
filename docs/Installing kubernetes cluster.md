@@ -18,6 +18,8 @@ Virtual machines at Vivo Cloud, with 2vCPU, 2GB of RAM memory, 40GB of SSD stora
 Hostname: ariel
 inet addr:10.100.18.10  Bcast:10.100.18.255  Mask:255.255.255.0
 inet6 addr: fe80::f816:8eff:fe81:24c6/64 Scope:Link
+
+$ ssh linux@10.100.18.10 -i id_rsa
 ```
 
 #### Node01
@@ -25,6 +27,8 @@ inet6 addr: fe80::f816:8eff:fe81:24c6/64 Scope:Link
 Hostname: mimas
 inet addr:10.100.18.11  Bcast:10.100.18.255  Mask:255.255.255.0
 inet6 addr: fe80::f816:8eff:fe92:17f5/64 Scope:Link
+
+$ ssh linux@10.100.18.11 -i id_rsa
 ```
 
 #### Node02
@@ -32,6 +36,8 @@ inet6 addr: fe80::f816:8eff:fe92:17f5/64 Scope:Link
 Hostname: thor
 inet addr:10.100.18.12  Bcast:10.100.18.255  Mask:255.255.255.0
 inet6 addr: fe80::f816:8eff:fe5e:636b/64 Scope:Link
+
+$ ssh linux@10.100.18.12 -i id_rsa
 ```
 
 #### Node03
@@ -39,6 +45,8 @@ inet6 addr: fe80::f816:8eff:fe5e:636b/64 Scope:Link
 Hostname: lupus
 inet addr:10.100.18.13  Bcast:10.100.18.255  Mask:255.255.255.0
 inet6 addr: fe80::f816:8eff:fe54:7e9/64 Scope:Link
+
+$ ssh linux@10.100.18.13 -i id_rsa
 ```
 
 #### Internet addresses
