@@ -252,6 +252,27 @@ Congratulations! In this tutorial you learned how to group functions into an app
 with a single command.
 
 
+## Accessing remote cluster whit fn client
+
+### Find fn-service port on cluster
+
+```bash
+linux@mimas:~$ kubectl get services --namespace fn
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+fn-mysql-master   ClusterIP   10.110.153.129   <none>        3306/TCP         25d
+fn-redis-master   ClusterIP   10.104.91.237    <none>        6379/TCP         25d
+fn-service        NodePort    10.97.104.21     <none>        8080:30088/TCP   25d <----------
+fn-ui             NodePort    10.98.221.69     <none>        80:30080/TCP     25d
+nginxsvc          NodePort    10.103.155.126   <none>        80:30116/TCP     23d
+```
+### On your local computer 
+```bash
+$ export API_URL=export API_URL=http://10.100.18.10:30088
+
+✔  ms-demo [master ↓·2 ✚2…12] $ fn apps list
+no apps found
+```
+
 ## More examples
 
 ![user input](images/terminal64.png)
