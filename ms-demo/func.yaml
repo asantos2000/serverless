@@ -1,4 +1,4 @@
-version: 0.0.15
+version: 0.0.21
 runtime: java
 cmd: com.example.fn.FunctionUsingOracleDatabase::handleRequest
 format: http

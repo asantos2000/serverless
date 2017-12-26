@@ -9,7 +9,7 @@ public class PrimeFunction {
 
         Flow fl = Flows.currentFlow();
 
-        return fl.supply(
+        return fl.supply (
                 () -> {
                     int num = 1, count = 0, i = 0;
 

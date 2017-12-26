@@ -79,8 +79,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: fn-ui
-    port: 80
+  - port: 80
     targetPort: 80
     nodePort: 30080
   selector:
@@ -175,6 +174,7 @@ spec:
   selector:
     app: redis
     role: mq
+
 ---
 apiVersion: apps/v1beta1
 kind: Deployment

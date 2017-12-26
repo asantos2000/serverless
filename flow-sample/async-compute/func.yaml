@@ -1,0 +1,5 @@
+version: 0.0.7
+runtime: java
+cmd: com.example.fn.AsyncChain::handleRequest
+format: http
+path: /async-chain

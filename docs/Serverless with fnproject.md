@@ -155,7 +155,21 @@ Updating route /first-example using image first-example:0.0.2...
 ![user input](images/terminal64.png)
 
 ```bash
-$ docker run --rm -it --link functions:api -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
+
+$ docker ps
+CONTAINER ID        IMAGE                 COMMAND                  CREATED                  STATUS              PORTS                              NAMES
+d9376791717f        fnproject/functions   "preentry.sh ./fun..."   Less than a second ago   Up 8 seconds        2375/tcp, 0.0.0.0:8080->8080/tcp   functions
+
+$ docker run --rm -it --link functions -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
+
+> FunctionsUI@0.0.21 start /app
+> node server
+
+Using API url: api:8080
+Server running on port 4000
+GET http://api:8080/v1/apps, params:  {}
+GET http://api:8080/stats, params:  {}
+mac-as:~$ docker run --rm -it --link functions -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
 ```
 
 #### Calling your function

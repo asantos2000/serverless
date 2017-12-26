@@ -1,0 +1,118 @@
+#test-conn.sh
+nc -z -v -w5 $1 80
+nc -z -v -w5 $1 443
+nc -z -v -w5 $1 6443
+nc -z -v -w5 $1 1883
+nc -z -v -w5 $1 2376
+nc -z -v -w5 $1 2377
+nc -z -v -w5 $1 2379
+nc -z -v -w5 $1 2380
+nc -z -u -v -w5 $1 4789
+nc -z -v -w5 $1 5000
+nc -z -v -w5 $1 5672
+nc -z -v -w5 $1 7946
+nc -z -v -w5 $1 7946
+nc -z -v -u -w5 $1 8472
+nc -z -v -w5 $1 8883
+nc -z -v -w5 $1 9765
+nc -z -v -w5 $1 10250
+nc -z -v -w5 $1 10251
+nc -z -v -w5 $1 10252
+nc -z -v -w5 $1 10255
+nc -z -v -w5 $1 30080
+nc -z -v -w5 $1 30088
+
+#Máquinas
+200.196.230.174 -> ariel (master)
+200.196.251.27  -> mimas (node01)
+200.196.251.136 -> thor  (node02)
+200.196.251.151 -> lupus (node03)
+
+#Testes
+✔  ms-demo [master ✚2…10] $ ./test-conn.sh 200.196.230.174
+ariel [200.196.230.174] 80 (http) open
+ariel [200.196.230.174] 443 (https): Operation timed out
+ariel [200.196.230.174] 6443 (sun-sr-https): Operation timed out
+ariel [200.196.230.174] 1883 (ibm-mqisdp): Operation timed out
+ariel [200.196.230.174] 2376: Operation timed out
+ariel [200.196.230.174] 2377: Operation timed out
+ariel [200.196.230.174] 2379: Operation timed out
+ariel [200.196.230.174] 2380: Operation timed out
+ariel [200.196.230.174] 5000 (commplex-main): Operation timed out
+ariel [200.196.230.174] 5672 (amqp): Operation timed out
+ariel [200.196.230.174] 7946: Operation timed out
+ariel [200.196.230.174] 7946: Operation timed out
+ariel [200.196.230.174] 8883: Operation timed out
+ariel [200.196.230.174] 9765: Operation timed out
+ariel [200.196.230.174] 10250: Operation timed out
+ariel [200.196.230.174] 10251: Operation timed out
+ariel [200.196.230.174] 10252 (apollo-relay): Operation timed out
+ariel [200.196.230.174] 10255: Operation timed out
+ariel [200.196.230.174] 30080: Operation timed out
+ariel [200.196.230.174] 30088: Operation timed out
+
+✘  ms-demo [master ↓·2 ✚2…10] $ ./test-conn.sh 200.196.251.27
+mimas [200.196.251.27] 80 (http) open
+mimas [200.196.251.27] 443 (https): Operation timed out
+mimas [200.196.251.27] 6443 (sun-sr-https): Operation timed out
+mimas [200.196.251.27] 1883 (ibm-mqisdp): Operation timed out
+mimas [200.196.251.27] 2376: Operation timed out
+mimas [200.196.251.27] 2377: Operation timed out
+mimas [200.196.251.27] 2379: Operation timed out
+mimas [200.196.251.27] 2380: Operation timed out
+mimas [200.196.251.27] 5000 (commplex-main): Operation timed out
+mimas [200.196.251.27] 5672 (amqp): Operation timed out
+mimas [200.196.251.27] 7946: Operation timed out
+mimas [200.196.251.27] 7946: Operation timed out
+mimas [200.196.251.27] 8883: Operation timed out
+mimas [200.196.251.27] 9765: Operation timed out
+mimas [200.196.251.27] 10250: Operation timed out
+mimas [200.196.251.27] 10251: Operation timed out
+mimas [200.196.251.27] 10252 (apollo-relay): Operation timed out
+mimas [200.196.251.27] 10255: Operation timed out
+mimas [200.196.251.27] 30080: Operation timed out
+mimas [200.196.251.27] 30088: Operation timed out
+
+✔  ms-demo [master ↓·2 ✚2…10] $ ./test-conn.sh 200.196.251.136
+thor [200.196.251.136] 80 (http) open
+thor [200.196.251.136] 443 (https): Operation timed out
+thor [200.196.251.136] 6443 (sun-sr-https): Operation timed out
+thor [200.196.251.136] 1883 (ibm-mqisdp): Operation timed out
+thor [200.196.251.136] 2376: Operation timed out
+thor [200.196.251.136] 2377: Operation timed out
+thor [200.196.251.136] 2379: Operation timed out
+thor [200.196.251.136] 2380: Operation timed out
+thor [200.196.251.136] 5000 (commplex-main): Operation timed out
+thor [200.196.251.136] 5672 (amqp): Operation timed out
+thor [200.196.251.136] 7946: Operation timed out
+thor [200.196.251.136] 7946: Operation timed out
+thor [200.196.251.136] 8883: Operation timed out
+thor [200.196.251.136] 9765: Operation timed out
+thor [200.196.251.136] 10250: Operation timed out
+thor [200.196.251.136] 10251: Operation timed out
+thor [200.196.251.136] 10252 (apollo-relay): Operation timed out
+thor [200.196.251.136] 10255: Operation timed out
+thor [200.196.251.136] 30080: Operation timed out
+thor [200.196.251.136] 30088: Operation timed out
+
+✘  ms-demo [master ↓·2 ✚2…10] $ ./test-conn.sh 200.196.251.151
+lupus [200.196.251.151] 80 (http) open
+lupus [200.196.251.151] 443 (https): Operation timed out
+lupus [200.196.251.151] 6443 (sun-sr-https): Operation timed out
+lupus [200.196.251.151] 1883 (ibm-mqisdp): Operation timed out
+lupus [200.196.251.151] 2376: Operation timed out
+lupus [200.196.251.151] 2377: Operation timed out
+lupus [200.196.251.151] 2379: Operation timed out
+lupus [200.196.251.151] 2380: Operation timed out
+lupus [200.196.251.151] 5000 (commplex-main): Operation timed out
+lupus [200.196.251.151] 5672 (amqp): Operation timed out
+lupus [200.196.251.151] 7946: Operation timed out
+lupus [200.196.251.151] 7946: Operation timed out
+lupus [200.196.251.151] 8883: Operation timed out
+lupus [200.196.251.151] 9765: Operation timed out
+lupus [200.196.251.151] 10250: Operation timed out
+lupus [200.196.251.151] 10251: Operation timed out
+lupus [200.196.251.151] 10252 (apollo-relay): Operation timed out
+lupus [200.196.251.151] 10255: Operation timed out
+lupus [200.196.251.151] 30080: Operation timed out
+lupus [200.196.251.151] 30088: Operation timed out

@@ -52,9 +52,9 @@ $ ssh linux@10.100.18.13 -i id_rsa
 #### Internet addresses
 ```
 200.196.230.174 -> ariel (master)
-200.196.251.27  -> mimas (node01)
-200.196.251.136 -> thor  (node02)
-200.196.251.151 -> lupus (node03)
+200.196.251.26  -> mimas (node01)
+200.196.251.119 -> thor  (node02)
+200.196.251.243 -> lupus (node03)
 ```
 Ports opened on firewall
 
