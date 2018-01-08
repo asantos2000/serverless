@@ -5,7 +5,12 @@ Alternatives: http://fission.io
 
 ## Developmen enviroment
 
-### Install docker
+### Install container
+
+1. [Docker](https://docs.docker.com/engine/installation/)
+2. Optional: [Fn Project Helm Chart](https://medium.com/fnproject/fn-project-helm-chart-for-kubernetes-e97ded6f4f0c)
+
+> If you're using virtualbox (option 2), and ypu're having problems to access your services, it'll necessary configure virtualbox's network port fowarding and map localhost ports to service ports.
 
 ### Install fn client
 
