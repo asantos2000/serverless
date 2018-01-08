@@ -1,4 +1,0 @@
-version: 0.0.4
-runtime: java
-cmd: com.example.fn.HelloFunction::handleRequest
-format: http

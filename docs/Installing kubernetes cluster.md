@@ -240,15 +240,7 @@ Comment swap line at /etc/fstab.
 > **Attention**: Execute the following commands only in the Master machine.
 
 ```bash
-$ kubeadm init
-
-[kubeadm] WARNING: kubeadm is in beta, please do not use it for production clusters.
-[init] Using Kubernetes version: v1.8.4
-[init] Using Authorization modes: [Node RBAC]
-[preflight] Running pre-flight checks
-...
-[addons] Applied essential addon: kube-dns
-[addons] Applied essential addon: kube-proxy
+$ sudo kubeadm init --pod-network-cidr 10.244.0.0/16
 
 Your Kubernetes master has initialized successfully!
 
@@ -265,7 +257,31 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 You can now join any number of machines by running the following on each node
 as root:
 
-  kubeadm join --token b679e7.a576312edad23ac1 10.100.18.10:6443 --discovery-token-ca-cert-hash sha256:add33852c5583e87c9a4224b47d8e5f6e62fcaa65e7f5cd36d39dd7b8c28cfab
+  kubeadm join --token 0f4ce3.5ddf0f259f4e02f1 10.100.18.10:6443
+```
+Ref: [Stackoverflow: kube-dns stays in ContainerCreating status](https://stackoverflow.com/questions/41466935/kube-dns-stays-in-containercreating-status/42310610#42310610)
+
+##### Config file
+```yaml
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1ERXdOVEl3TWpneE5sb1hEVEk0TURFd016SXdNamd4Tmxvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBT0hHCm5pYWxjMFVsbm05ajVXVlZDZjI0TGNabHIyalp5dzVxdzdPS2psQ09leWJHU0UzUVJjNXEvSkRKOUdueTc4WE0KS0FJMVVBSVhQOG15U3JoTlp3Tmx0M0xSRkg4Ni8yUVlVVVJzQ0pwSmJWWmg2Tll5dGJVenlRWVlRVlhrMFhzVwpINWhSQW4yaWY0TktHWnRrY0V0K0ZValV3SWN2RFFmeXBnRStuUzhidXg0K0ROM0hQSE9hc2hkMzNLUWtUdG1yCjY1eXZ3M3doNHlhdS9iSWtUeU1IdTQ1NzFHZUpROGpnOHpwMHZLcmloYVJMN2JkUndKN2pUMkUwanQwQ1BMbjUKZ3RWVXQzcmNpSzJxb2tQcXhvTmhLanE4TDUxUG5ESkhaZyt2WkRHeHM2UUoyNzJrUDFseWxQSDVKOUIzVDZ0aAp2NmdTWS9UM084UTlQYWZhNGpNQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFINFBEMll2Rm1nUndZMGlGa2xvN2R1U3FqUEQKV0NWbmtCMFFVUnFoODFCYlM5a0QxZkxNQkk3b29zTXZubU9kd0l1MzRCZThFendWZzlES2NSSy9GQU80OXNHQgp2cUNyWUpkU3ZtZXhWNUdiemIweUNlNEJ4RzVMNGVoRXMzdDhxWlkrblpObkIzVmZ1TDEwa204ajdLQ2ZwdnMrClpnODA1ZUtmaXlCV2JVdENOalJ6Uk9PcUFrd0hGd21EUENRbFpoVlByUVFnMEU3bWszMXUrZUQ4bFgyb0ExYnkKNmVwdWdUQ0FaamZqeDRTMCt3bkdJZnMxWnJHVzRVajAxejNhVFBEQjNiWXNKMzVwaHpMYmMyelBQTzJrRzJPYwplazVGMlp6VEtFMEhpRkNzbEVmU1pEYTY0dHNWaU9zS0VHbVdyWVJSWnk1ZFNTV2FTb1Y0NmRkWkhZQT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://10.100.18.10:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM4akNDQWRxZ0F3SUJBZ0lJVWtRWVp5MVFEam93RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB4T0RBeE1EVXlNREk0TVRaYUZ3MHhPVEF4TURVeU1ESTRNVGxhTURReApGekFWQmdOVkJBb1REbk41YzNSbGJUcHRZWE4wWlhKek1Sa3dGd1lEVlFRREV4QnJkV0psY201bGRHVnpMV0ZrCmJXbHVNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXYrSzU0QWpYdUZsU3c5QmUKV2RmalBvVCt1TklUWFArR3k5ZWFoNjVFTForWFFzaDZiUW8xKzFhdVpxcnhWYXVudWJYbTVJTFY2QjNJNTRjbQpwamd3dnBOc3l2ek1tUDFzUTRxRHBXbENXbElqQ3QrYkRwWXlFVHZySDZUMUNwVzg4N0kxZW1CRTY2cEhNbWlGCnM0SGNmK0syOEtHM2xZUmt6bHgzMG0yTkZpVzZqUlhnQ2VTZUJKVWNZbHhCT3ZFTVR6b0VJZE9PMjRnQmVTRTQKUHhvQ2xnaDUxS0lNSlFvV0MxZGMvQVlVZ3hQaW9zeExwbXEzQTBteFpyZDBDUHo4NHZQTERvTUp4azhZVkUvdApnTllEb1F4YUlvaDRpNU1OOXRmc2pjTzU3UzlWeCtuR1J1U3FYN2tRLzNabjc1WGJXdGdSTDRZWU9MMVA1dmkxCkpaNlo2UUlEQVFBQm95Y3dKVEFPQmdOVkhROEJBZjhFQkFNQ0JhQXdFd1lEVlIwbEJBd3dDZ1lJS3dZQkJRVUgKQXdJd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFER1I1b0hUeTZ3S21LOHBKa2Z4QmVOY3YzNTMwMENoS2JlRQovK1lReGpQdlU1NE4vbytLOGtoV0lHMDkrcFcxK1UvblNxWXo3ZUR3dXkzakt1ZkZjMER4enJUUmI1M25nRllnCnQzOWpqUzNyUGFDcWE2b2xUdzhid1MyS2FLQVNlZXp4R2RKT2pGY3I0SUZEcGt2TUlzNW0wMjhQcWFHVEUwMWsKZmFUR3J6NHB6ckpVTDgvY29mUThlcW9TcHFOMXVJdTBZRm5HSW9jcXVoQnJyK2QzRGpBbnBnQ3F2MWt1YW1pcQpzUnVQVExhNlR3MDZoTklGbzBzV29jYVI2b0hBY3M2Y2xyRitKSldXcFM2aTJaVUcrVWlIYjFDMU9DSHM1TlVBCkZBcjlXR0lvQXpha1JoTjJ1eE9jRlpOMHhFUzFBVUIrMVFteXdNNDBJMXh6eE1ENnFobz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBditLNTRBalh1RmxTdzlCZVdkZmpQb1QrdU5JVFhQK0d5OWVhaDY1RUxaK1hRc2g2CmJRbzErMWF1WnFyeFZhdW51YlhtNUlMVjZCM0k1NGNtcGpnd3ZwTnN5dnpNbVAxc1E0cURwV2xDV2xJakN0K2IKRHBZeUVUdnJINlQxQ3BXODg3STFlbUJFNjZwSE1taUZzNEhjZitLMjhLRzNsWVJremx4MzBtMk5GaVc2alJYZwpDZVNlQkpVY1lseEJPdkVNVHpvRUlkT08yNGdCZVNFNFB4b0NsZ2g1MUtJTUpRb1dDMWRjL0FZVWd4UGlvc3hMCnBtcTNBMG14WnJkMENQejg0dlBMRG9NSnhrOFlWRS90Z05ZRG9ReGFJb2g0aTVNTjl0ZnNqY081N1M5VngrbkcKUnVTcVg3a1EvM1puNzVYYld0Z1JMNFlZT0wxUDV2aTFKWjZaNlFJREFRQUJBb0lCQVFDUmZqd3Azd3FTUVVnOApLUlloVVV5QTd4Nmt6TVRaMHZaR1FXaHVVSGhwajRTRm9yVVJVSmkxeG5mZWFPY3Nha2QyekxJUnVoS3ZPVVpJCkozWHF1dGhhNkRXcGhCMHVNNW1QYk10ODlGN1hWVWcweW04cmxEN0tTb0J4TWdhS3pCYkZRTzdEcDVNYWpiWUcKUnJKNTlaRlhkblAzNk9ibWU4aGpvRUZLVUw2VmR4MUJYNExCaDlpdjN2K2hoRDZJeElPZzVTckhNTHZTSmVvVApCcVg0dnhBa3o4WDBwNlhhc0w5dmNHd3JMY1AycTlrNkZQZnBkelVmeXM0bWlHT2RNY05FT2N1Yk9LeGZsUm0zCkdObG9lWWFsb3pNUE1hdW5vS3BtRjNycWVKTU9PTkY5TkYzTUt0cFhkWktzQzJGdVIyV2VOb3QxVk5lV3FBREIKV25qWVlFY3hBb0dCQU93VEM3TDhIL1pBcEhJanYyOWoxZlVvMDBlV3VFbFJrdG9UYnVCY3RjdVlMMGlpTENETQpBMGx0OHp5U1lRSHlaRk5XWTN3bndjaDkvbEV0ODFUa0pDeENlcEpIRVkwbG44anc5VmZIV2JCMkRGVTh0aWxDCldtb25tc3N1eEsxRzJXbEF0S3haZjVjYk50Z2hhcThLUk04QXphbG5ZVUcwTDJkRDVNbk5XUFJmQW9HQkFOQVUKNEZmZW9IQUJKUEtIOUF4dzhRZVZvaXNvMnV2WHVDSzI4akwxdHljMUUwOWlVb0R4TEw4TjhtdG5ROXA0aVJFSApvZndJMERjL2FxcjB5cFRINGNiT3haZUxqdC9aU05NNjgzY1RRVVVaQlhTdGxOaGJULzlwN09jQWpxd0NhSGkvCmViVDRuMHdzREhhT1k2K0lHMjMxWC9vM0laNVlpajVsWjd5dEVGYTNBb0dCQUlMV1kydUZkS2xrVmorME5Fc20KQjlUaUZZYmRyN0ZpOW9MS3RtNitzenJ0VTNkcitnMExSTjhUZ3ZXVkl4S1RKcXRSZTcyNXd4cTlTWS93YWFZbwo4eXRjaE5aQmNTYkxMVzJPcmt0Qi95RmZxNklxRGNOOE5PUVVveVBzL2JBVFRqZVpWd2tXYVRKME1NZEViZjRwCk1NMlJZbXA3RTFuNDVUVFVXaDdHSW9EOUFvR0JBTGFuSEtjRlRXQUVJU0trSko0bkpleTZkTGZlRFEycE5vR0MKaGVnbHVMZzU1dEZ3Uld2YVNLVU00UmRXZGtGNFBSa3QwZ3NpMFdNdHo3eHhWTUoxRXNNcERsbVFyOEhmUWdYcApZWDNNOFNadWFGT2JhMlRnQXNENWduTGtFbGo3WkNsYUtzT28ybXhLM2tYVGg3MjFoQjVwbmU1T0pyeVFqQWxwCmlqNGN6SkxSQW9HQUNrMWM1d2dsdDNZbXlyREhGc3JvQ3FneUJZcXV0bTBFblc0ZTlRWkR5TE92YkpqUnhkcDAKUjZvNmovWDNtcVdHUjlyOGZJZmFYRFJKUHZsTHhCUHdYU0ttWVE3YkZUQTRZeFNsVlVFMG01bm1LelJhZkd3MwpkaUszaUtLREhTYmZlbjk0WE02ZlZLQ0Y4d2h1ckkraHlOOFhPY3RWVk1FSDVKRzY5UHA5MHRNPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 ```
 
 ##### Before join nodes
@@ -286,15 +302,21 @@ $ sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/
 
 ##### Testing
 ```bash
-$ kubectl get pods --all-namespaces
-NAMESPACE     NAME                            READY     STATUS    RESTARTS   AGE
-kube-system   etcd-ariel                      1/1       Running   0          41s
-kube-system   kube-apiserver-ariel            1/1       Running   0          29s
-kube-system   kube-controller-manager-ariel   1/1       Running   0          40s
-kube-system   kube-dns-545bc4bfd4-7kx2s       2/3       Running   0          1m
-kube-system   kube-flannel-ds-rpdbd           1/1       Running   0          57s
-kube-system   kube-proxy-4sw98                1/1       Running   0          1m
-kube-system   kube-scheduler-ariel            1/1       Running   0          41s
+linux@thor:~$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
+kube-system   etcd-ariel                              1/1       Running   0          1h
+kube-system   kube-apiserver-ariel                    1/1       Running   0          6m
+kube-system   kube-controller-manager-ariel           1/1       Running   0          6m
+kube-system   kube-dns-6f4fd4bdf-ndgjw                3/3       Running   0          1h
+kube-system   kube-flannel-ds-2sdm7                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-fsvnd                   1/1       Running   19         1h
+kube-system   kube-flannel-ds-j8brn                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-xs2qm                   1/1       Running   18         1h
+kube-system   kube-proxy-7llr5                        1/1       Running   0          1h
+kube-system   kube-proxy-qcs85                        1/1       Running   0          1h
+kube-system   kube-proxy-qsccv                        1/1       Running   0          1h
+kube-system   kube-proxy-t6gx2                        1/1       Running   0          1h
+kube-system   kube-scheduler-ariel                    1/1       Running   0          1h
 ```
 
 #### Installing dashboard
@@ -309,22 +331,22 @@ $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master
 Afert pod is running
 
 ```bash
-kubectl get pods --all-namespaces
-NAMESPACE     NAME                                   READY     STATUS    RESTARTS   AGE
-kube-system   etcd-ariel                             1/1       Running   0          22h
-kube-system   kube-apiserver-ariel                   1/1       Running   0          22h
-kube-system   kube-controller-manager-ariel          1/1       Running   0          22h
-kube-system   kube-dns-545bc4bfd4-7fm6s              3/3       Running   0          22h
-kube-system   kube-flannel-ds-2mmqv                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-c7xsb                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-gwph9                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-j2q5s                  1/1       Running   0          22h
-kube-system   kube-proxy-6mszq                       1/1       Running   0          22h
-kube-system   kube-proxy-ndmdm                       1/1       Running   0          22h
-kube-system   kube-proxy-t4q89                       1/1       Running   0          22h
-kube-system   kube-proxy-w4hg6                       1/1       Running   0          22h
-kube-system   kube-scheduler-ariel                   1/1       Running   0          22h
-kube-system   kubernetes-dashboard-747c4f7cf-ftmpz   1/1       Running   0          1m
+linux@thor:~$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
+kube-system   etcd-ariel                              1/1       Running   0          1h
+kube-system   kube-apiserver-ariel                    1/1       Running   0          6m
+kube-system   kube-controller-manager-ariel           1/1       Running   0          6m
+kube-system   kube-dns-6f4fd4bdf-ndgjw                3/3       Running   0          1h
+kube-system   kube-flannel-ds-2sdm7                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-fsvnd                   1/1       Running   19         1h
+kube-system   kube-flannel-ds-j8brn                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-xs2qm                   1/1       Running   18         1h
+kube-system   kube-proxy-7llr5                        1/1       Running   0          1h
+kube-system   kube-proxy-qcs85                        1/1       Running   0          1h
+kube-system   kube-proxy-qsccv                        1/1       Running   0          1h
+kube-system   kube-proxy-t6gx2                        1/1       Running   0          1h
+kube-system   kube-scheduler-ariel                    1/1       Running   0          1h
+kube-system   kubernetes-dashboard-6ddcb6df4c-pjmc4   1/1       Running   0          23s
 
 ```
 
@@ -362,11 +384,7 @@ mac-as:~$ kubectl proxy
 Starting to serve on 127.0.0.1:8001
 ```
 
-Open on your browser
-
-```bash
-http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-```
+Open on your browser [open dashboard](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
 
 On Login View (Authentication method screen) choose SKIP.
 
@@ -381,28 +399,29 @@ If the file exists (i.e. you're accessing Google Containers) you'll need to merg
 After that you're able to execute the same commands are in the master.
 
 ```bash
-mac-as:~$ kubectl get pods --all-namespaces
-NAMESPACE     NAME                                   READY     STATUS    RESTARTS   AGE
-kube-system   etcd-ariel                             1/1       Running   0          22h
-kube-system   kube-apiserver-ariel                   1/1       Running   0          22h
-kube-system   kube-controller-manager-ariel          1/1       Running   0          22h
-kube-system   kube-dns-545bc4bfd4-7fm6s              3/3       Running   0          22h
-kube-system   kube-flannel-ds-2mmqv                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-c7xsb                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-gwph9                  1/1       Running   0          22h
-kube-system   kube-flannel-ds-j2q5s                  1/1       Running   0          22h
-kube-system   kube-proxy-6mszq                       1/1       Running   0          22h
-kube-system   kube-proxy-ndmdm                       1/1       Running   0          22h
-kube-system   kube-proxy-t4q89                       1/1       Running   0          22h
-kube-system   kube-proxy-w4hg6                       1/1       Running   0          22h
-kube-system   kube-scheduler-ariel                   1/1       Running   0          22h
-kube-system   kubernetes-dashboard-747c4f7cf-ftmpz   1/1       Running   0          20m
+mac-as:kubernetes$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                    READY     STATUS    RESTARTS   AGE
+kube-system   etcd-ariel                              1/1       Running   0          1h
+kube-system   kube-apiserver-ariel                    1/1       Running   0          10m
+kube-system   kube-controller-manager-ariel           1/1       Running   0          10m
+kube-system   kube-dns-6f4fd4bdf-ndgjw                3/3       Running   0          1h
+kube-system   kube-flannel-ds-2sdm7                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-fsvnd                   1/1       Running   19         1h
+kube-system   kube-flannel-ds-j8brn                   1/1       Running   18         1h
+kube-system   kube-flannel-ds-xs2qm                   1/1       Running   18         1h
+kube-system   kube-proxy-7llr5                        1/1       Running   0          1h
+kube-system   kube-proxy-qcs85                        1/1       Running   0          1h
+kube-system   kube-proxy-qsccv                        1/1       Running   0          1h
+kube-system   kube-proxy-t6gx2                        1/1       Running   0          1h
+kube-system   kube-scheduler-ariel                    1/1       Running   0          1h
+kube-system   kubernetes-dashboard-6ddcb6df4c-pjmc4   1/1       Running   0          4m
 ```
 
 #### Join nodes
 
 ```bash
-$ kubeadm join --token b679e7.a576312edad23ac1 10.100.18.10:6443 --discovery-token-ca-cert-hash sha256:add33852c5583e87c9a4224b47d8e5f6e62fcaa65e7f5cd36d39dd7b8c28cfab
+$ sudo   kubeadm join --token 163d91.e54df2dea1751e68 10.100.18.10:6443 --discovery-token-ca-cert-hash sha256:ba5b0fccf37381328df209d12e3bb67a5f99c8655485780dd02392b5fb74f6bf
+
 [kubeadm] WARNING: kubeadm is in beta, please do not use it for production clusters.
 [preflight] Running pre-flight checks
 [discovery] Trying to connect to API Server "10.100.18.10:6443"
@@ -420,3 +439,88 @@ Node join complete:
 
 Run 'kubectl get nodes' on the master to see this machine join.
 ```
+
+### Install Helm
+
+Follow instructions for [installation on specific OS](https://github.com/kubernetes/helm#install).
+
+If does not work, with error above:
+
+> ```anderson@mac-as:fn-helm(master)*$ helm status vivo-poc
+Error: getting deployed release "vivo-poc": User "system:serviceaccount:kube-system:default" cannot list configmaps in the namespace "kube-system". (get configmaps)
+```
+
+> Ref: [https://github.com/kubernetes/helm/issues/3130](https://github.com/kubernetes/helm/issues/3130) (noprom commented on Nov 14, 2017)
+
+Try
+
+```bash
+$ vi rbac-config.yaml
+```
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: tiller-clusterrolebinding
+subjects:
+- kind: ServiceAccount
+  name: tiller
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: ""
+```
+
+```bash
+$ kubectl apply -f rbac-config.yaml
+```
+
+```bash
+$ helm init --service-account tiller --upgrade
+```
+
+### Update permission for fnProject
+
+```bash
+$ vi fnproject-rbac.yaml
+```
+
+```yaml
+# NOTE: The service account `default:default` already exists in k8s cluster.
+# You can create a new account following like this:
+#---
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
+#  name: <new-account-name>
+#  namespace: <namespace>
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: fnproject-rbac
+subjects:
+  - kind: ServiceAccount
+    # Reference to upper's `metadata.name`
+    name: default
+    # Reference to upper's `metadata.namespace`
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```bash
+kubectl apply -f fnproject-rbac.yaml
+```
+
+> Set permission for fnlb get pods

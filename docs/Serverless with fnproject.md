@@ -3,6 +3,7 @@ The Fn project is a container native serverless platform that you can run anywhe
 
 Alternatives: http://fission.io
 
+## Developmen enviroment
 
 ### Install docker
 
@@ -266,24 +267,230 @@ Congratulations! In this tutorial you learned how to group functions into an app
 with a single command.
 
 
-## Accessing remote cluster whit fn client
+## Cluster enviroment
 
-### Find fn-service port on cluster
+1. [Install kuberentes-helm](https://github.com/kubernetes/helm)
+1. Update permissions for fnProject
+1. Customize chart for non-cloud enviroment
+1. [Install chart](https://github.com/fnproject/fn-helm)
+
+### 2. Update permission for fnProject
 
 ```bash
-linux@mimas:~$ kubectl get services --namespace fn
-NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-fn-mysql-master   ClusterIP   10.110.153.129   <none>        3306/TCP         25d
-fn-redis-master   ClusterIP   10.104.91.237    <none>        6379/TCP         25d
-fn-service        NodePort    10.97.104.21     <none>        8080:30088/TCP   25d <----------
-fn-ui             NodePort    10.98.221.69     <none>        80:30080/TCP     25d
-nginxsvc          NodePort    10.103.155.126   <none>        80:30116/TCP     23d
+$ vi fnproject-rbac.yaml
 ```
+
+```yaml
+# NOTE: The service account `default:default` already exists in k8s cluster.
+# You can create a new account following like this:
+#---
+#apiVersion: v1
+#kind: ServiceAccount
+#metadata:
+#  name: <new-account-name>
+#  namespace: <namespace>
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: fnproject-rbac
+subjects:
+  - kind: ServiceAccount
+    # Reference to upper's `metadata.name`
+    name: default
+    # Reference to upper's `metadata.namespace`
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```bash
+kubectl apply -f fnproject-rbac.yaml
+```
+
+> Set permission for fnlb get pods
+
+### 3. Customize chart for non-cloud enviroment
+
+> You'll download this file from git in the next step.
+> 
+> Change this file before execute helm install.
+> 
+> Choose diferent name from my-release for your release (ex: vivp-poc).
+
+**fn-helm/fn/values.yaml**
+
+```yaml
+# Default values for Fn
+imagePullPolicy: IfNotPresent
+
+fn:
+  service:
+    port: 80
+    type: NodePort
+    annotations: {}
+
+fnlb:
+  image: fnproject/fnlb:0.0.189
+
+fnserver:
+  image: fnproject/fnserver:0.3.227  #TAG-fnserver-image
+  logLevel: info
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+
+
+ui:
+  enabled: true
+  fnui:
+    image: fnproject/ui:0.0.21  #TAG-fnui-image
+    resources: {}
+  flowui:
+    image: fnproject/flow:ui #TAG-flowui-image
+    resources: {}
+  service:
+    flowuiPort: 3000
+    fnuiPort: 4000
+    type: NodePort
+    annotations: {}
+
+
+flow:
+  image: fnproject/flow:0.1.75  #TAG-flow-image
+  logLevel: info
+  service:
+    port: 81
+    type: NodePort
+    annotations: {}
+  resources: {}
+
+
+##
+## MySQL chart configuration
+##
+mysql:
+  persistence:
+    enabled: false
+    nodeSelector: mysql-storage
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    storageClass: mysql
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+  mysqlDatabase: fndb
+  mysqlUser: fnapp
+  mysqlPassword: boomsauce
+
+##
+## Redis chart configuration
+##
+redis:
+  persistence:
+    enabled: false
+    nodeSelector: redis-storage
+    storageClass: redis
+    accessMode: ReadWriteOnce
+    size: 8Gi
+  usePassword: false
+
+## Ingress configuration.
+## ref: https://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  enabled: false
+```
+
+### Locate fn-api port on cluster
+
+#### First method
+
+```bash
+$ kubectl get services
+anderson@mac-as:fn-helm(master)*$ kubectl get services
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
+kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP                         2d
+vivo-poc-fn-api    NodePort    10.109.173.143   <none>        80:30021/TCP                    2h
+vivo-poc-fn-flow   NodePort    10.100.170.207   <none>        81:31177/TCP                    2h
+vivo-poc-fn-ui     NodePort    10.111.125.248   <none>        3000:31327/TCP,4000:30246/TCP   2h
+vivo-poc-mysql     ClusterIP   10.111.78.103    <none>        3306/TCP                        2h
+vivo-poc-redis     ClusterIP   10.107.207.124   <none>        6379/TCP                        2h
+```
+
+#### Second method
+
+```bash
+anderson@mac-as:fn-helm(master)*$ helm status vivo-poc
+
+LAST DEPLOYED: Mon Jan  8 15:10:45 2018
+NAMESPACE: default
+STATUS: DEPLOYED
+ 
+RESOURCES:
+==> v1/Secret
+NAME            TYPE    DATA  AGE
+vivo-poc-mysql  Opaque  2     2h
+ 
+==> v1/Service
+NAME              TYPE       CLUSTER-IP      EXTERNAL-IP  PORT(S)                        AGE
+vivo-poc-mysql    ClusterIP  10.111.78.103   <none>       3306/TCP                       2h
+vivo-poc-redis    ClusterIP  10.107.207.124  <none>       6379/TCP                       2h
+vivo-poc-fn-flow  NodePort   10.100.170.207  <none>       81:31177/TCP                   2h
+vivo-poc-fn-api   NodePort   10.109.173.143  <none>       80:30021/TCP                   2h
+vivo-poc-fn-ui    NodePort   10.111.125.248  <none>       3000:31327/TCP,4000:30246/TCP  2h
+ 
+==> v1beta1/DaemonSet
+NAME             DESIRED  CURRENT  READY  UP-TO-DATE  AVAILABLE  NODE SELECTOR  AGE
+vivo-poc-fn-api  3        3        3      3           3          <none>         2h
+ 
+==> v1beta1/Deployment
+NAME                   DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+vivo-poc-mysql         1        1        1           1          2h
+vivo-poc-redis         1        1        1           1          2h
+vivo-poc-fn-flow-depl  1        1        1           1          2h
+vivo-poc-fn-fnlb-depl  1        1        1           1          2h
+vivo-poc-fn-ui         1        1        1           1          2h
+ 
+==> v1/Pod(related)
+NAME                             READY  STATUS    RESTARTS  AGE
+vivo-poc-fn-api-175f4            1/1    Running   4         2h
+vivo-poc-fn-api-6j96w            1/1    Running   0         1h
+vivo-poc-fn-api-p6978            1/1    Running   0         58m
+vivo-poc-mysql-273033387-34nqb   0/1    Init:0/1  0         2h
+vivo-poc-redis-2219699869-l0fvn  1/1    Running   0         2h
+ 
+ 
+NOTES:
+The Fn service can be accessed within your cluster at:
+ 
+- http://vivo-poc-fn-api.default:80
+ 
+Set the FN_API_URL environment variable to this address to use the Fn service from outside the cluster:
+ 
+    export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services vivo-poc-fn-api)
+    export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+ 
+    export FN_API_URL=http://$NODE_IP:$NODE_PORT
+ 
+############################################################################
+###   WARNING: Persistence is disabled!!! You will lose function and     ###
+###   flow state when the MySQL pod is terminated.                       ###
+###   See the README.md for instructions on configuring persistence.     ###
+############################################################################
+
+```
+
 ### On your local computer 
 ```bash
-$ export API_URL=export API_URL=http://10.100.18.10:30088
+anderson@mac-as:fn-helm(master)*$ export API_URL=export API_URL=http://10.100.18.10:30021
 
-✔  ms-demo [master ↓·2 ✚2…12] $ fn apps list
+anderson@mac-as:fn-helm(master)*$ fn apps list
 no apps found
 ```
 

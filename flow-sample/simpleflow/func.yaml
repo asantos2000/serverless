@@ -1,6 +1,0 @@
-name: simpleflow
-version: 0.0.2
-runtime: java
-cmd: com.example.fn.SimpleFlowFunction::handleRequest
-format: http
-path: /simpleflow
