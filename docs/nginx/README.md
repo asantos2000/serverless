@@ -198,6 +198,19 @@ vivo-poc-redis     ClusterIP   10.107.207.124   <none>        6379/TCP          
 
 ```
 
+## Modificando o nginx.yaml
+Se somente o config-map for modificado, um novo deploy não irá reiniciar o NGINX e ele não lerá a nova configuração, para forçar um *restart* execute:
+
+```bash
+#Para o NGINX (replicas=0)
+kubectl scale rc nginxrc --replicas=0 
+replicationcontroller "nginxrc" scaled
+
+#Inicia o NGINX (replicas > 0)
+kubectl scale rc nginxrc --replicas=1
+replicationcontroller "nginxrc" scaled
+```
+
 ## Testing locally
 ```bash
 docker run --name nginx-cache -p 80:80 -p 443:443 -v $PWD/nginx.conf:/etc/nginx/nginx.conf:ro nginx
