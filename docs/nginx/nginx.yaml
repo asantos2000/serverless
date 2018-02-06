@@ -51,9 +51,9 @@ data:
    }
 
    http {
-      proxy_cache_path  /var/cache/nginx/java-config levels=1:2 keys_zone=java-config:10m max_size=1g
+      proxy_cache_path  /var/cache/nginx/pessoa levels=1:2 keys_zone=pessoa:10m max_size=1g
                     inactive=310s use_temp_path=off;
-      proxy_cache_path  /var/cache/nginx/oracle-query levels=1:2 keys_zone=oracle-query:10m max_size=1g
+      proxy_cache_path  /var/cache/nginx/endereco levels=1:2 keys_zone=endereco:10m max_size=1g
                     inactive=310s use_temp_path=off;
    
       server {
@@ -65,32 +65,30 @@ data:
 
          server_name localhost;
 
-         location /java-config {
+         location /pessoa {
             add_header Cache-Control "no-cache, must-revalidate, max-age=0";
             add_header X-Proxy-Cache $upstream_cache_status;
          
-            proxy_cache java-config;
+            proxy_cache pessoa;
             proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_404;
             proxy_cache_lock on;
             proxy_cache_valid any 300s;
             proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 
-            proxy_pass http://200.196.230.174:30088/r/java-hello/java-config;
-            proxy_set_header Authorization "Basic VGhhbmsgeW91IGZvciByZWFkaW5nIGJuZWlqdC5ubAo=";
+            proxy_pass http://10.100.18.10:30021/r/vivo-person/person;
          }
       
-         location /oracle-query {
+         location /endereco {
             add_header Cache-Control "no-cache, must-revalidate, max-age=0";
             add_header X-Proxy-Cache $upstream_cache_status;
          
-            proxy_cache oracle-query;
+            proxy_cache endereco;
             proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_404;
             proxy_cache_lock on;
             proxy_cache_valid any 300s;
             proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 
-            proxy_pass http://200.196.230.174:30088/r/vivo-demo/vivo-ms-demo;
-            proxy_set_header Authorization "Basic VGhhbmsgeW91IGZvciByZWFkaW5nIGJuZWlqdC5ubAo=";
+            proxy_pass http://10.100.18.10:30021/r/vivo-person/endereco-pessoa;
          }
       }
    }
