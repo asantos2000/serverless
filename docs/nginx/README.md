@@ -187,6 +187,15 @@ kubectl create -f -nginx.yaml
 ## Find which port ngix is running
 ```bash
 kubectl get services --namespace default
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
+kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP                         31d
+nginxsvc           NodePort    10.99.157.231    <none>        80:30557/TCP                    48s <---------
+vivo-poc-fn-api    NodePort    10.109.173.143   <none>        80:30021/TCP                    29d
+vivo-poc-fn-flow   NodePort    10.100.170.207   <none>        81:31177/TCP                    29d
+vivo-poc-fn-ui     NodePort    10.111.125.248   <none>        3000:31327/TCP,4000:30246/TCP   29d
+vivo-poc-mysql     ClusterIP   10.111.78.103    <none>        3306/TCP                        29d
+vivo-poc-redis     ClusterIP   10.107.207.124   <none>        6379/TCP                        29d
+
 ```
 
 ## Testing locally
