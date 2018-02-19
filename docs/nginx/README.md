@@ -181,7 +181,7 @@ Este arquivo será adicionado no kubernetes na seção config-map.
 
 ## Deploy to kubernetes
 ```bash
-kubectl create -f -nginx.yaml
+kubectl apply -f -nginx.yaml
 ```
 
 ## Find which port ngix is running
