@@ -11,7 +11,7 @@ spec:
     protocol: TCP
     name: http
   selector:
-   app: nginx
+    app: nginx
 ---
 apiVersion: v1
 kind: ReplicationController
