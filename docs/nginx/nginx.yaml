@@ -65,6 +65,17 @@ data:
 
          server_name localhost;
 
+         location /openid {
+            add_header Cache-Control "no-cache, must-revalidate, max-age=0";
+            add_header X-Proxy-Cache $upstream_cache_status;
+            proxy_cache openid;
+            proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_404;
+            proxy_cache_lock on;
+            proxy_cache_valid 200 302 300s;
+            proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
+            proxy_pass http://10.100.18.10:30021/r/openid/pessoa;
+         }
+
          location /pessoa {
             add_header Cache-Control "no-cache, must-revalidate, max-age=0";
             add_header X-Proxy-Cache $upstream_cache_status;
@@ -72,7 +83,7 @@ data:
             proxy_cache pessoa;
             proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_404;
             proxy_cache_lock on;
-            proxy_cache_valid any 300s;
+            proxy_cache_valid 200 302 300s;
             proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 
             proxy_pass http://10.100.18.10:30021/r/vivo-person/person;
@@ -85,7 +96,7 @@ data:
             proxy_cache endereco;
             proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504 http_404;
             proxy_cache_lock on;
-            proxy_cache_valid any 300s;
+            proxy_cache_valid 200 302 300s;
             proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
 
             proxy_pass http://10.100.18.10:30021/r/vivo-person/endereco-pessoa;
